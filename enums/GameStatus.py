@@ -1,0 +1,7 @@
+class GameStatus:
+    NEW=1
+    BET=2
+    PLAYER_OPERATION=3
+    DEALER_OPERATION=4
+    STATEMENT=5
+    GAME_OVER=6
