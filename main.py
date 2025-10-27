@@ -15,7 +15,7 @@ def create_game():
     game = Game(len(games) + 1, name)
     game_dict = game.to_json_object()
     games.append(game)
-    return jsonify(game_dict), 201
+    return jsonify(game_dict), 200
 
 
 # 下注
@@ -27,17 +27,19 @@ def game_bet(game_id):
         return jsonify({"error": "Game not found"}), 404
     if game.status != GameStatus.NEW:
         return "operation error", 400
-    # TODO 清空手牌
-    @app.route('/game/<int:game_id>/hand', methods=["POST"])
-    def hand():
-        data = request.get_json()
-        game: Game = next((b for b in games if b.id == game_id), None)
-    def play_round(self):
-        # 清空手牌
-        self.player.hand=Hand()
-        self.dealer.hand=Hand()
+    #清空手牌
+    game.player.hand.clear()
+    game.dealer.hand.clear()
+    #下注
+    bet=data.get("bet")
+    if game.player.chips>bet:
+        print("chips<bet")
+        return "operation error", 400
+
+
     game.player.bet = data.get("bet")
     game.status = GameStatus.BET
+
 
     #發牌
     game.deal_cards()
@@ -45,7 +47,7 @@ def game_bet(game_id):
     game.player_next_move()
 
     game_dict = game.to_json_object()
-    return jsonify(game_dict), 201
+    return jsonify(game_dict), 200
 
 # 玩家操作
 @app.route('/game/<int:game_id>/player_operation',methods=['POST'])
@@ -53,7 +55,7 @@ def player_operation(game_id):
     game:Game = next((b for b in games if b.id == game_id), None)
     if not game:
         return jsonify({"error": "Game not found"}), 404
-    if game.status != GameStatus.BET and game.status != GameStatus.PLAYER_OPERATION:
+    if not GameStatus.operation_allow(game.status):
         return "operation error", 400
     data = request.get_json()
     opt=data.get("operation")
@@ -61,19 +63,18 @@ def player_operation(game_id):
     if not success:
         return "operation error", 400
     else:
-        if game.status == GameStatus.PLAYER_OPERATION:
-            game_dict = game.to_json_object()
-            return jsonify(game_dict), 201
-        elif game.status == GameStatus.STATEMENT:
-            return "you loss!", 200
-        return "system error", 500
-
+        match GameStatus.get(game.status):
+            case GameStatus.PLAYER_OPERATION | GameStatus.STATEMENT | GameStatus.NEW:
+                game_dict = game.to_json_object()
+                return jsonify(game_dict), 200
+            case _:
+                return "system error", 500
 
 # 取得遊戲
-@app.route('/game/<int:game_id>', methods=['Get'])
+@app.route('/game/<int:game_id>', methods=['GET'])
 def get_game(game_id):
     game = next((b for b in games if b.id == game_id), None)
-    return jsonify(game.to_json_object()), 201
+    return jsonify(game.to_json_object()), 200
 
 
 if __name__ == '__main__':

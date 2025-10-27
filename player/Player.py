@@ -31,6 +31,8 @@ class Player:
         print(f"籌碼{self.chips}->{result}")
         self.chips = result
 
+
+
     def next_move(self):
         if self.is_first_turn:
             self.move = "要牌（h）/ 停牌（s) / 雙倍（d):"

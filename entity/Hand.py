@@ -13,4 +13,6 @@ class Hand:
         return total
     def __str__(self):
         return"".join(str(c)for c in self.cards)
+    def clear(self):
+        self.cards=[]
 
