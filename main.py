@@ -32,7 +32,7 @@ def game_bet(game_id):
     game.dealer.hand.clear()
     #下注
     bet=data.get("bet")
-    if game.player.chips>bet:
+    if game.player.chips<bet:
         print("chips<bet")
         return "operation error", 400
 
