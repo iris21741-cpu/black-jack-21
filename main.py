@@ -43,8 +43,7 @@ def game_bet(game_id):
 
     #發牌
     game.deal_cards()
-    #要提示
-    game.player_next_move()
+    game.check_player_value()
 
     game_dict = game.to_json_object()
     return jsonify(game_dict), 200

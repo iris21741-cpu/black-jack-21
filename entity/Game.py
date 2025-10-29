@@ -17,6 +17,8 @@ class Game:
         self.player.hand.clear()
         self.dealer.hand.clear()
         self.status = GameStatus.NEW
+        self.player.move="請下注"
+        self.player.is_first_turn=True
 
     def to_json_object(self):
         return {
@@ -39,8 +41,9 @@ class Game:
 
     def player_next_move(self):
         self.player.next_move()
-
     def player_operation(self, opt):
+        if self.status==GameStatus.STATEMENT and opt !="Y" and opt !="N":
+            return False
         if opt == "h":
             self.player.hand.add_card(self.deck.deal())
             print(self.player.show_current_value())
@@ -50,7 +53,10 @@ class Game:
         elif opt == "s":
             # 莊家操作
             self.dealer_operation()
+            result = result_statement(self.player, self.dealer)
+            self.player.statement_bet(result)
             self.status = GameStatus.STATEMENT
+            self.player.move = self.player.move + "要繼續遊戲嗎？（Ｙ／Ｎ）"
             return True
         elif opt == "d" and self.player.is_first_turn:  # 只允許第一回合雙倍
             if self.player.bet * 2 <= self.player.chips:
@@ -90,7 +96,7 @@ class Game:
         self.player.statement_bet(statement)
 
     def check_player_value(self):
-        if self.player.hand.value() >= 21 :
+        if self.player.hand.value() >= 21 or len(self.player.hand.cards) >= 5:
             result = result_statement(self.player, self.dealer)
             self.player.statement_bet(result)
             ok = False
@@ -103,7 +109,7 @@ class Game:
                 self.player.move = "遊戲結束"
             else:
                 self.status = GameStatus.STATEMENT
-                self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"
+                self.player.move = self.player.move + "要繼續遊戲嗎？（Ｙ／Ｎ）"
         else:
             self.status = GameStatus.PLAYER_OPERATION
             self.player.next_move()
