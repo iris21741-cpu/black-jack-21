@@ -53,6 +53,7 @@ def game_bet(game_id):
 @app.route('/game/<int:game_id>/player_operation',methods=['POST'])
 def player_operation(game_id):
     game:Game = next((b for b in games if b.id == game_id), None)
+    print(game.to_json_object())
     if not game:
         return jsonify({"error": "Game not found"}), 404
     if not GameStatus.operation_allow(game.status):
@@ -64,7 +65,7 @@ def player_operation(game_id):
         return "operation error", 400
     else:
         match GameStatus.get(game.status):
-            case GameStatus.PLAYER_OPERATION | GameStatus.STATEMENT | GameStatus.NEW:
+            case GameStatus.PLAYER_OPERATION | GameStatus.STATEMENT | GameStatus.NEW|GameStatus.GAME_OVER:
                 game_dict = game.to_json_object()
                 return jsonify(game_dict), 200
             case _:
