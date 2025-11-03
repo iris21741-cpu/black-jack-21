@@ -3,7 +3,7 @@ from entity.Deck import Deck
 from entity.Hand import Hand
 from game.Rule import result_statement
 from player.Player import Player
-
+# 舊的遊戲
 class BlackjackGame:
     def __init__(self):
         self.deck=Deck()
