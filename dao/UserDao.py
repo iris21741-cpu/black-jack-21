@@ -1,16 +1,21 @@
 from mysql.Engine import SessionLocal
 from entity.orm.User import User
+from sqlalchemy.exc import SQLAlchemyError
 
-# 新增
-with SessionLocal() as session:
-    new_user = User(full_name="王小明", email="ming@example.com", gender=1)
-    session.add(new_user)
-    session.commit()
-    session.refresh(new_user)
-    print("✅ 新增：", new_user)
-
-# 查詢
-with SessionLocal() as session:
-    users = session.query(User).filter(User.status == 1).all()
-    for u in users:
-        print(u)
+def create_user(new_user: User):
+    """建立新用戶紀錄"""
+    try:
+        with SessionLocal() as session:
+            session.add(new_user)
+            session.commit()
+            session.refresh(new_user)
+            print("✅ 新增成功：", new_user)
+            return new_user
+    except SQLAlchemyError as e:
+        print("❌ 新增失敗，錯誤原因：", str(e))
+        # 若出錯記得 rollback，避免 session 卡死
+        try:
+            session.rollback()
+        except Exception:
+            pass
+        raise

@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 
 from entity.Game import Game
 from enums.GameStatus import GameStatus
+from register.Register import register
 
 app = Flask(__name__)
 games = []
@@ -77,6 +78,25 @@ def get_game(game_id):
     game = next((b for b in games if b.id == game_id), None)
     return jsonify(game.to_json_object()), 200
 
+# 註冊
+@app.route('/register',methods=['POST'])
+def api_register():
+    data = request.get_json()
+    full_name = data["full_name"]
+    email = data["email"]
+    gender = int(data["gender"])
+    password = data["password"]
+    try:
+        new_user = register(full_name,email,gender,password)
+    except Exception as e:
+        return e, 400
+    return jsonify(new_user.to_json_object()), 200
+#
+# # 登入
+# @app.route('/login/<int:game_id>', methods=['GET'])
+# def get_game(game_id):
+#     game = next((b for b in games if b.id == game_id), None)
+#     return jsonify(game.to_json_object()), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
