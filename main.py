@@ -91,12 +91,12 @@ def api_register():
     except Exception as e:
         return e, 400
     return jsonify(new_user.to_json_object()), 200
-#
-# # 登入
+
+# 登入
 # @app.route('/login/<int:game_id>', methods=['GET'])
 # def get_game(game_id):
 #     game = next((b for b in games if b.id == game_id), None)
 #     return jsonify(game.to_json_object()), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
