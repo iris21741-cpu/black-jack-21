@@ -90,7 +90,7 @@ def api_register():
     try:
         new_user = register(full_name,email,gender,password)
     except Exception as e:
-        return e, 400
+        return str(e), 400
     return jsonify(new_user.to_json_object()), 200
 
 # 登入
@@ -106,4 +106,5 @@ def api_login():
     return login(email, password), 200
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
