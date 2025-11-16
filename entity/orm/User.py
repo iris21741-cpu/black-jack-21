@@ -83,6 +83,6 @@ class User(Base):
             "email": self.email,
             "status": self.status,
             "gender": self.gender,
-            "create_time": self.create_time,
-            "last_edit_time": self.last_edit_time
+            "create_time": self.create_time.timestamp(),
+            "last_edit_time": self.last_edit_time.timestamp()
         }

@@ -2,6 +2,7 @@ from mysql.Engine import SessionLocal
 from entity.orm.User import User
 from sqlalchemy.exc import SQLAlchemyError
 
+
 def create_user(new_user: User):
     """建立新用戶紀錄"""
     try:
@@ -19,3 +20,11 @@ def create_user(new_user: User):
         except Exception:
             pass
         raise
+
+def get_by_email(email: str):
+    """
+    依照 email 查詢用戶
+    若無資料則回傳 None
+    """
+    with SessionLocal() as session:
+        return session.query(User).filter(User.email == email).first()
