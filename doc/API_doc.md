@@ -56,7 +56,7 @@
   "player": {
     "chips": 900,
     "bet": 100,
-    "hand": ["10♠", "5♥"]
+    "hand": ["10♠", "7♥"]
   },
   "dealer": {
     "hand": ["A♦", "hidden"]
@@ -150,3 +150,61 @@
 | 400 | 操作錯誤或無效狀態 |
 | 404 | 找不到指定的遊戲 |
 | 500 | 系統錯誤 |
+
+## POST /register
+註冊新使用者。
+
+### Request Body
+```json
+{
+  "full_name": "John Doe",
+  "email": "john@example.com",
+  "gender": 1,
+  "password": "password123"
+}
+```
+
+### Response 200
+```json
+{
+  "id": 10,
+  "full_name": "John Doe",
+  "email": "john@example.com",
+  "gender": 1
+}
+```
+
+### Error Responses
+| 狀態碼 | 訊息 |
+|--------|------|
+| 400 | 帳號重複、資料格式錯誤等 |
+
+## POST /login
+登入並取得 Token。
+
+### Request Body
+```json
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
+### Response 200
+```json
+{
+  "success": true,
+  "token": "JWT_TOKEN_HERE",
+  "user": {
+    "id": 10,
+    "email": "john@example.com",
+    "full_name": "John Doe"
+  }
+}
+```
+
+### Error Responses
+| 狀態碼 | 訊息 |
+|--------|------|
+| 400 | email is empty / password length < 8 |
+| 400 | 帳號或密碼錯誤 |
