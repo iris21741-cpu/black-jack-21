@@ -4,7 +4,7 @@ from auth.JWTUtil import create_token
 from cache.Redis import redis_client
 from dao.UserDao import get_by_email
 
-
+user_token=[]
 def login(email: str, password: str):
     # 1. 查 email
     user = get_by_email(email)
@@ -28,7 +28,8 @@ def login(email: str, password: str):
         "user": user.to_json_object(),
         "token": token
     }
-    r.set("user:" + str(user.id), json.dumps(cache))
+    # r.set("user:" + str(user.id), json.dumps(cache))
+    user_token.append(cache)
 
     # 3. 成功登入
     return {
