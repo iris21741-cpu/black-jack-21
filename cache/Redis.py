@@ -10,8 +10,3 @@ def redis_client():
     )
 
     return Redis(connection_pool=pool)
-
-if __name__ == '__main__':
-    r = redis_client()
-    user = r.get("user:11")
-    print(user)
