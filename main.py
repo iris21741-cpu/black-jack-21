@@ -77,6 +77,8 @@ def player_operation(game_id):
 @app.route('/game/<int:game_id>', methods=['GET'])
 def get_game(game_id):
     game = next((b for b in games if b.id == game_id), None)
+    if game is None:
+        return "The game cannot be found. You need to start a new game.", 200
     return jsonify(game.to_json_object()), 200
 
 # 註冊
@@ -106,5 +108,5 @@ def api_login():
     return login(email, password), 200
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
 
