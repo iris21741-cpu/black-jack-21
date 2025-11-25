@@ -21,8 +21,8 @@ class Game:
     def to_json_object(self):
         return {
             "id": self.id,
-            "player": self.player.show_current_value(),
-            "dealer": self.dealer.show_current_value(),
+            "player": self.player.to_json_object(),
+            "dealer": self.dealer.to_json_object(),
             "status": self.status.name,
             "bet": self.player.bet,
             "chips": self.player.chips,
@@ -51,6 +51,10 @@ class Game:
             # 莊家操作
             self.dealer_operation()
             self.status = GameStatus.STATEMENT
+
+            statement = result_statement(self.player, self.dealer)
+            self.player.statement_bet(statement)
+            self.game_is_over()
             return True
         elif opt == "d" and self.player.is_first_turn:  # 只允許第一回合雙倍
             if self.player.bet * 2 <= self.player.chips:
@@ -98,12 +102,15 @@ class Game:
             ok = True
 
         if not ok:
-            if self.player.chips <=0 :
-                self.status=GameStatus.GAME_OVER
-                self.player.move = "遊戲結束"
-            else:
-                self.status = GameStatus.STATEMENT
-                self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"
+            self.game_is_over()
         else:
             self.status = GameStatus.PLAYER_OPERATION
             self.player.next_move()
+
+    def game_is_over(self):
+        if self.player.chips <= 0:
+            self.status = GameStatus.GAME_OVER
+            self.player.move = "遊戲結束"
+        else:
+            self.status = GameStatus.STATEMENT
+            self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"

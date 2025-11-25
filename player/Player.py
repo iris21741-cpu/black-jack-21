@@ -13,6 +13,12 @@ class Player:
     def show_current_value(self):
         return f"[{self.name}]手牌:{self.hand}點數：{self.hand.value()}"
 
+    def to_json_object(self):
+        return {
+            "name": self.name,
+            "hands": self.hand.to_json_object(),
+        }
+
     def place_bet(self):
         while True:
             try:

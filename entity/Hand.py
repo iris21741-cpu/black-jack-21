@@ -15,4 +15,9 @@ class Hand:
         return"".join(str(c)for c in self.cards)
     def clear(self):
         self.cards=[]
+    def to_json_object(self):
+        return {
+            "cards": [card.to_dict() for card in self.cards],
+            "value": self.value()
+        }
 

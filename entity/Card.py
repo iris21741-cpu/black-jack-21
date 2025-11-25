@@ -11,3 +11,9 @@ class Card:
             return 11
         else:
             return int(self.rank)
+
+    def to_dict(self):
+        return {
+            "rank": self.rank,
+            "suit": self.suit
+        }
