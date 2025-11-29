@@ -1,9 +1,9 @@
-import json
-
 from auth.JWTUtil import create_token
 from dao.UserDao import get_by_email
 
-user_token=[]
+user_token = []
+
+
 def login(email: str, password: str):
     # 1. 查 email
     user = get_by_email(email)

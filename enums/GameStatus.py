@@ -1,12 +1,13 @@
 from enum import Enum
 
+
 class GameStatus(Enum):
-    NEW=1
-    BET=2
-    PLAYER_OPERATION=3
-    DEALER_OPERATION=4
-    STATEMENT=5
-    GAME_OVER=6
+    NEW = 1
+    BET = 2
+    PLAYER_OPERATION = 3
+    DEALER_OPERATION = 4
+    STATEMENT = 5
+    GAME_OVER = 6
 
     @classmethod
     def get(cls, value):

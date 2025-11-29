@@ -1,5 +1,6 @@
 from redis import ConnectionPool, Redis
 
+
 def redis_client():
     pool = ConnectionPool(
         host='localhost',

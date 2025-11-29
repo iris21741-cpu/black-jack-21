@@ -95,7 +95,7 @@ class Game:
         self.player.statement_bet(statement)
 
     def check_player_value(self):
-        if self.player.hand.value() >= 21 :
+        if self.player.hand.value() >= 21:
             result = result_statement(self.player, self.dealer)
             self.player.statement_bet(result)
             ok = False
@@ -115,6 +115,3 @@ class Game:
         else:
             self.status = GameStatus.STATEMENT
             self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"
-
-    def player_operation_allow(self, status):
-        pass

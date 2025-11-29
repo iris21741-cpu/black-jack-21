@@ -1,7 +1,9 @@
 ### POST `/game`
+
 **功能說明**：建立一個新的遊戲實例，並回傳初始狀態。
 
 **Request Body**
+
 ```json
 {
   "name": "Player1"
@@ -12,8 +14,8 @@
 |------|--------|----|------|
 | name | string | ✅  | 玩家名稱 |
 
-
 **Response (200 OK)**
+
 ```json
 {
   "id": 1,
@@ -28,7 +30,9 @@
   }
 }
 ```
+
 ### POST `/game/{game_id}/bet`
+
 **功能說明**：玩家下注後系統自動發牌。  
 **限制條件**：僅能在遊戲狀態為 `NEW` 時執行。
 
@@ -39,6 +43,7 @@
 | game_id | int | ✅  | 遊戲編號 |
 
 **Request Body**
+
 ```json
 {
   "bet": 100
@@ -50,6 +55,7 @@
 | bet | int | ✅  | 下注金額（不可超過玩家籌碼） |
 
 **Response (200 OK)**
+
 ```json
 {
   "id": 1,
@@ -73,7 +79,8 @@
 | 404 | 遊戲不存在                |
 
 ### POST `/game/{game_id}/player_operation`
-**功能說明**：執行玩家動作（如要牌、停牌等）。  
+
+**功能說明**：執行玩家動作（如要牌、停牌等）。
 
 **Path Parameter**
 
@@ -82,6 +89,7 @@
 | game_id | int | ✅  | 遊戲編號 |
 
 **Request Body**
+
 ```json
 {
   "operation": "h"
@@ -93,6 +101,7 @@
 | operation | string | ✅  | 玩家動作，可為 `"要牌"`, `"停牌"`, `"double"`  等（依 `Game` 類別實作） |
 
 **Response (200 OK)**
+
 ```json
 {
   "id": 1,
@@ -116,6 +125,7 @@
 | 500 | 系統錯誤（未知 GameStatus） |
 
 ### GET `/game/{game_id}`
+
 **功能說明**：取得目前遊戲狀態。
 
 **Path Parameter**
@@ -125,6 +135,7 @@
 | game_id | int | ✅  | 遊戲編號 |
 
 **Response (200 OK)**
+
 ```json
 {
   "id": 1,
@@ -147,7 +158,6 @@
 |-----|-------|
 | 404 | 遊戲不存在 |
 
-
 | 狀態碼 | 說明        |
 |-----|-----------|
 | 200 | 請求成功      |
@@ -156,9 +166,11 @@
 | 500 | 系統錯誤      |
 
 ## POST /register
+
 註冊新使用者。
 
 ### Request Body
+
 ```json
 {
   "full_name": "John Doe",
@@ -169,6 +181,7 @@
 ```
 
 ### Response 200
+
 ```json
 {
   "id": 10,
@@ -185,9 +198,11 @@
 | 400 | 帳號重複、資料格式錯誤等 |
 
 ## POST /login
+
 登入並取得 Token。
 
 ### Request Body
+
 ```json
 {
   "email": "john@example.com",
@@ -196,6 +211,7 @@
 ```
 
 ### Response 200
+
 ```json
 {
   "success": true,

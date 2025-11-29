@@ -1,6 +1,7 @@
-from mysql.Engine import SessionLocal
-from entity.orm.User import User
 from sqlalchemy.exc import SQLAlchemyError
+
+from entity.orm.User import User
+from mysql.Engine import SessionLocal
 
 
 def create_user(new_user: User):
@@ -20,6 +21,7 @@ def create_user(new_user: User):
         except Exception:
             pass
         raise
+
 
 def get_by_email(email: str):
     """

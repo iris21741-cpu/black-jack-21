@@ -7,6 +7,7 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
+
 class UserGame(Base):
     __tablename__ = "user_game"
     __table_args__ = {"comment": "21點遊戲"}

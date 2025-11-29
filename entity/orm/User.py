@@ -1,11 +1,12 @@
+import re
+
 from sqlalchemy import (
-    Column, BigInteger, String, Integer, text, UniqueConstraint, Index
+    Column, BigInteger, String, Integer, UniqueConstraint, Index
 )
 from sqlalchemy.dialects.mysql import DATETIME
-from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import validates
-import re
+from sqlalchemy.sql import func
 
 Base = declarative_base()
 
