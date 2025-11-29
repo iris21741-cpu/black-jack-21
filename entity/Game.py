@@ -7,6 +7,7 @@ from player.Player import Player
 
 class Game:
     def __init__(self, _id, name):
+        self.hand = None
         self.id = _id
         self.player = Player(name)
         self.dealer = Dealer()
@@ -114,3 +115,6 @@ class Game:
         else:
             self.status = GameStatus.STATEMENT
             self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"
+
+    def player_operation_allow(self, status):
+        pass
