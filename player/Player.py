@@ -2,8 +2,7 @@ from entity.Hand import Hand
 
 
 class Player:
-    def __init__(self, uid, name, chips=1000):
-        self.uid = uid
+    def __init__(self, name, chips=1000):
         self.name = name
         self.hand = Hand()
         self.chips = chips
