@@ -32,10 +32,10 @@ def get_by_email(email: str):
     with SessionLocal() as session:
         return session.query(User).filter(User.email == email).first()
 
-def get_by_id(id: BigInteger):
+def get_by_id(uid):
     """
     依照 id 查詢用戶
     若無資料則回傳 None
     """
     with SessionLocal() as session:
-        return session.query(User).filter(User.id == id).first()
+        return session.query(User).filter(User.id == uid).first()

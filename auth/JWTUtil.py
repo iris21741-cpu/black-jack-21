@@ -27,14 +27,26 @@ def verify_token(token: str):
     3. 回傳 payload
     """
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload  # 驗證成功 → 回傳 payload 字典
+        # 解碼 JWT Token，驗證簽名和有效期限
+        # payload 包含了您在簽發 Token 時放入的用戶資訊
+        data = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return data
     except jwt.ExpiredSignatureError:
-        print("token expire")
-        return None  # Token 過期
-    except jwt.InvalidTokenError as ie:
-        print("invalid token", str(ie))
-        return None
+        return {
+            'message': 'Token has expired!',
+            'code': 40102
+        }
+    except jwt.InvalidSignatureError:
+        return {
+            'message': 'Token signature is invalid!',
+            'code': 40103
+        }
+    except Exception as e:
+        # 處理其他如格式錯誤等問題
+        return {
+            'message': f'Token is invalid or malformed: {e}',
+            'code': 40104
+        }
 
 
 if __name__ == '__main__':

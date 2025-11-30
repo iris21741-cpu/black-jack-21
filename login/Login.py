@@ -1,8 +1,10 @@
 from auth.JWTUtil import create_token
 from dao.UserDao import get_by_email
+from email2fa.CodeBuilder import generate_totp_code
+from email2fa.EmailSender import send_code
 
-user_token = []
-
+# 本地暫存用戶token資訊
+user_token = {}
 
 def login(email: str, password: str):
     # 1. 查 email
@@ -30,10 +32,41 @@ def login(email: str, password: str):
     # r.set("user:" + str(user.id), json.dumps(cache))
     # user_token.append(cache)
 
-    # 3. 成功登入
-    return {
-        "success": True,
-        "message": "登入成功，請至 email 收取驗證碼",
-        "user": user.to_json_object()
-        # "token": token
+    # 建2FA驗證碼
+    code = generate_totp_code(user.otp_secret)
+    # 發送驗證碼到用戶信箱
+    ok = send_code(user.email, code)
+    if not ok :
+        return {
+            "success": False,
+            "message": "驗證碼發送失敗",
+            "user": user.to_json_object()
+            # "token": token
+        }
+    else:
+        # 3. 成功登入
+        return {
+            "success": True,
+            "message": "登入成功，請至 email 收取驗證碼",
+            "user": user.to_json_object()
+            # "token": token
+        }
+
+def gen_token(user):
+    """
+    驗證成功產生 token
+    :param user: 用戶資訊
+    :return: json格式的用戶資訊和 token
+    """
+    token = create_token(user.id, user.email)
+    # r = redis_client()
+    cache = {
+        "user": user.to_json_object(),
+        "token": token
     }
+    # r.set("user:" + str(user.id), json.dumps(cache))
+
+    # 本地暫存用戶的 token 資訊
+    user_token[user.id] = cache
+
+    return cache

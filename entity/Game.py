@@ -6,10 +6,10 @@ from player.Player import Player
 
 
 class Game:
-    def __init__(self, _id, name):
+    def __init__(self, _id, uid, name):
         self.hand = None
         self.id = _id
-        self.player = Player(name)
+        self.player = Player(uid, name)
         self.dealer = Dealer()
         self.status = GameStatus.NEW
         self.deck = Deck()
