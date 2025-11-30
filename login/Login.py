@@ -21,19 +21,19 @@ def login(email: str, password: str):
             "message": "密碼錯誤"
         }
 
-    token = create_token(user.id, email)
+    # token = create_token(user.id, email)
     # r = redis_client()
-    cache = {
-        "user": user.to_json_object(),
-        "token": token
-    }
+    # cache = {
+    #     "user": user.to_json_object(),
+    #     "token": token
+    # }
     # r.set("user:" + str(user.id), json.dumps(cache))
-    user_token.append(cache)
+    # user_token.append(cache)
 
     # 3. 成功登入
     return {
         "success": True,
-        "message": "登入成功",
-        "user": user.to_json_object(),
-        "token": token
+        "message": "登入成功，請至 email 收取驗證碼",
+        "user": user.to_json_object()
+        # "token": token
     }

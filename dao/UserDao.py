@@ -1,3 +1,4 @@
+from sqlalchemy import BigInteger
 from sqlalchemy.exc import SQLAlchemyError
 
 from entity.orm.User import User
@@ -30,3 +31,11 @@ def get_by_email(email: str):
     """
     with SessionLocal() as session:
         return session.query(User).filter(User.email == email).first()
+
+def get_by_id(id: BigInteger):
+    """
+    依照 id 查詢用戶
+    若無資料則回傳 None
+    """
+    with SessionLocal() as session:
+        return session.query(User).filter(User.id == id).first()

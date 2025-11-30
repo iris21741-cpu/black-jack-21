@@ -1,5 +1,6 @@
 import re
 
+import pyotp
 from sqlalchemy import (
     Column, BigInteger, String, Integer, UniqueConstraint, Index
 )
@@ -33,6 +34,16 @@ class User(Base):
     password = Column(String(100, collation="utf8mb4_bin"), nullable=False, comment="用戶密碼")
     status = Column(Integer, nullable=False, default=1, comment="0.停用 1.啟用")
 
+    # 🔑 新增：用於儲存 Base32 密鑰的欄位
+    # Base32 密鑰通常約 16 到 32 個字元長，String(50) 已經足夠安全。
+    # 必須設置為 nullable=True，因為用戶可能尚未啟用 2FA。
+    otp_secret = Column(
+        String(50, collation="utf8mb4_bin"),
+        nullable=True,
+        default=pyotp.random_base32,  # <--- 關鍵修改：使用 pyotp 函式作為 default
+        comment="兩步驟驗證 (TOTP) 的 Base32 密鑰"
+    )
+
     create_time = Column(
         DATETIME(fsp=3),
         nullable=False,
@@ -47,7 +58,7 @@ class User(Base):
         comment="最後更新時間",
     )
 
-    # ✅ 驗證密碼規則
+    # ✅ 驗證密碼規則 (保持不變)
     @validates("password")
     def validate_password(self, key, password):
         """
@@ -66,7 +77,7 @@ class User(Base):
             )
         return password
 
-    # ✅ 驗證 email 格式
+    # ✅ 驗證 email 格式 (保持不變)
     @validates("email")
     def validate_email(self, key, address):
         pattern = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
@@ -75,15 +86,19 @@ class User(Base):
         return address
 
     def __repr__(self):
-        return f"<User(id={self.id}, full_name='{self.full_name}', email='{self.email}', password='{self.password}', status={self.status})>"
+        # 在 __repr__ 中加入 otp_secret 以便調試
+        return f"<User(id={self.id}, full_name='{self.full_name}', email='{self.email}', otp_secret={self.otp_secret is not None})>"
 
     def to_json_object(self):
+        # 不應該在 JSON 物件中傳回 otp_secret，因為這是敏感資訊
         return {
             "id": self.id,
             "full_name": self.full_name,
             "email": self.email,
             "status": self.status,
             "gender": self.gender,
+            # 可以新增一個欄位表示是否啟用 2FA
+            "is_2fa_enabled": self.otp_secret is not None,
             "create_time": self.create_time.timestamp(),
             "last_edit_time": self.last_edit_time.timestamp()
         }
