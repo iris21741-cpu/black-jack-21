@@ -3,7 +3,7 @@ from mysql.Engine import SessionLocal
 
 # 新增
 with SessionLocal() as session:
-    new_game_player = GamePlayer(user_id=1, game_id=1, chips=0, bet=0, is_fist_turn=1,
+    new_game_player = GamePlayer(user_id=1, game_id=1, chips=0, bet=0, is_first_turn=1,
                                  type=1, user_move=None)
     session.add(new_game_player)
     session.commit()

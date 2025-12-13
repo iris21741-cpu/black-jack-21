@@ -3,24 +3,23 @@ from dao.UserDao import get_by_email
 from email2fa.CodeBuilder import generate_totp_code
 from email2fa.EmailSender import send_code
 
-# 本地暫存用戶token資訊
-user_token = {}
+#本地暫存用戶token資訊
+user_token={}
 
-def login(email: str, password: str):
-    # 1. 查 email
-    user = get_by_email(email)
+def login(email:str,password:str):
+    # 1.查email
+    user=get_by_email(email)
 
     if user is None:
-        return {
-            "success": False,
-            "message": "Email 不存在"
-        }
-
-    # 2. 比對密碼（你的 ORM 是純文字密碼）
-    if user.password != password:
-        return {
-            "success": False,
-            "message": "密碼錯誤"
+        return{
+        "success":False,
+        "message":"Email 不存在"
+    }
+    # 2.比對密碼（你的ORM是純文字密碼）
+    if user.password !=password:
+        return{
+            "success":False,
+            "message":"密碼錯誤"
         }
 
     # token = create_token(user.id, email)
@@ -55,18 +54,18 @@ def login(email: str, password: str):
 def gen_token(user):
     """
     驗證成功產生 token
-    :param user: 用戶資訊
-    :return: json格式的用戶資訊和 token
+    :param user: 用戶資料
+    :return: json格式的用戶資訊和token
     """
-    token = create_token(user.id, user.email)
-    # r = redis_client()
-    cache = {
-        "user": user.to_json_object(),
-        "token": token
+    token=create_token(user.id,user.email)
+    # r=redis_client()
+    cache={
+        "user":user.to_json_object(),
+        "token":token
     }
-    # r.set("user:" + str(user.id), json.dumps(cache))
+    #r.set("user:"+str(user.id),json.dumps(cache)
 
-    # 本地暫存用戶的 token 資訊
-    user_token[user.id] = cache
+    #本地暫存用戶的token 資訊
+    user_token[user.id]=cache
 
     return cache
