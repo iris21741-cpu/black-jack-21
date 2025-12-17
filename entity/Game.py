@@ -15,8 +15,15 @@ class Game:
         self.deck = Deck()
 
     def renew(self):
+        """
+        重新一局
+        """
+
+        # 清空玩家手牌
         self.player.hand.clear()
+        # 清空莊家手牌
         self.dealer.hand.clear()
+        # 回復狀態 = NEW
         self.status = GameStatus.NEW
 
     def to_json_object(self):
@@ -66,7 +73,7 @@ class Game:
                 self.check_player_value()
                 return True
             else:
-                print("籌碼不足，不能雙倍！")
+                print("Insufficient chips, cannot double down")
                 return False
         elif self.status == GameStatus.STATEMENT:
             # 繼續遊戲
@@ -95,7 +102,7 @@ class Game:
         self.player.statement_bet(statement)
 
     def check_player_value(self):
-        if self.player.hand.value() >= 21:
+        if self.player.hand.value() >= 21 or len(self.player.hand.cards) >= 5:
             result = result_statement(self.player, self.dealer)
             self.player.statement_bet(result)
             ok = False

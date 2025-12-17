@@ -25,5 +25,9 @@ class GamePlayer(Base):
     last_edit_time = Column(DATETIME(fsp=3), nullable=False,
                             server_default=text("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)"))
 
+    # 用途： __repr__(Representation)
+    # 是一個Python的魔術方法（MagicMethod），用於定義當你在Python 環境中（例如在互動式 Shell或日誌中）直接列印一個物件時，它應該如何顯示。
+    # 邏輯： *它返回一個字串。
+    # 這個字串通常包含類別名稱( < GamePlayer(...) >) 和一些關鍵欄位的值（如 id、user_id、game_id等）。
     def __repr__(self):
         return f"<GamePlayer(id={self.id}, user_id={self.user_id}, game_id={self.game_id}, chips={self.chips})>"

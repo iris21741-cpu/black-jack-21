@@ -7,7 +7,7 @@ from email2fa.CodeBuilder import verify
 from entity.Game import Game
 from enums.GameStatus import GameStatus
 from login.Login import login, gen_token
-from register.Register import register
+from register.Register import register, checkRegister
 
 app = Flask(__name__)
 games = []
@@ -68,11 +68,15 @@ def api_register():
     gender = int(data["gender"])
     password = data["password"]
     try:
+        is_valid = checkRegister(email)
+        if not is_valid:
+            return "email is duplicate", 400
         new_user = register(full_name, email, gender, password)
     except Exception as e:
         return str(e), 400
-    return jsonify(new_user.to_json_object()), 200
-
+    return jsonify({
+        "user": new_user.to_json_object()
+    }), 200
 # 登入
 @app.route('/login', methods=["POST"])
 @cross_origin()
@@ -91,7 +95,7 @@ def api_login():
 @cross_origin()
 def api_email_2fa():
     data = request.get_json()
-    uid = request.headers.get("uid")
+    uid = request.headers.get("X-User-Id")
     if uid is None:
         return "params error [uid]", 400
     code = data.get("code")
@@ -121,7 +125,7 @@ def create_game(current_user_data):
 @app.route('/game/<int:game_id>/bet', methods=["POST"])
 @cross_origin()
 @token_required
-def game_bet(game_id):
+def game_bet(game_id, current_user_data):
     data = request.get_json()
     game: Game = next((b for b in games if b.id == game_id), None)
     if not game:
@@ -130,6 +134,8 @@ def game_bet(game_id):
         return "operation error", 400
     # 清空手牌
     game.player.hand.clear()
+    # 回復成第一次下注
+    game.player.is_first_turn = True
     game.dealer.hand.clear()
     # 下注
     bet = data.get("bet")
@@ -153,15 +159,15 @@ def game_bet(game_id):
 @app.route('/game/<int:game_id>/player_operation', methods=["POST"])
 @cross_origin()
 @token_required
-def player_operation(game_id):
+def player_operation(game_id, current_user_data):
     game: Game = next((b for b in games if b.id == game_id), None)
-    print(game.to_json_object())
     if not game:
         return jsonify({{"error": "Game not found"}}), 404
     if not GameStatus.operation_allow(game.status):
         return "operation error", 400
     data = request.get_json()
     opt = data.get("operation")
+    print(f"operation={opt}")
     success = game.player_operation(opt)
     if not success:
         return "operation error", 400
@@ -178,7 +184,7 @@ def player_operation(game_id):
 @app.route('/game/<int:game_id>', methods=["GET"])
 @cross_origin()
 @token_required
-def get_game(game_id):
+def get_game(game_id, current_user_data):
     game = next((b for b in games if b.id == game_id), None)
     if game is None:
         return "The game cannot be found.You need to start a new game!", 200
