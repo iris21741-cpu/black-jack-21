@@ -119,6 +119,7 @@ class Game:
         if self.player.chips <= 0:
             self.status = GameStatus.GAME_OVER
             self.player.move = "遊戲結束"
+            print("Game is over")
         else:
             self.status = GameStatus.STATEMENT
             self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"
