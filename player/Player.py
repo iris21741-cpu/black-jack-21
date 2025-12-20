@@ -1,3 +1,5 @@
+import logging
+
 from entity.Hand import Hand
 
 
@@ -28,14 +30,14 @@ class Player:
                     self.bet = bet
                     break
                 else:
-                    print("下注金額無效，請重新輸入整數金額")
+                    logging.error("下注金額無效，請重新輸入整數金額")
 
             except ValueError:
-                print("請輸入數字")
+                logging.info("請輸入數字")
 
     def statement_bet(self, statement):
         result = self.chips + self.bet * statement
-        print(f"籌碼{self.chips}->{result}")
+        logging.info(f"籌碼{self.chips}->{result}")
         self.chips = result
 
     def next_move(self):

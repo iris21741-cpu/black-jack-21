@@ -22,6 +22,7 @@ pycparser==2.23
 PyJWT==2.10.1
 PyMySQL==1.1.2
 pyotp==2.9.0
+python-dotenv==1.2.1
 redis==7.0.1
 regex==2025.11.3
 setuptools==80.9.0

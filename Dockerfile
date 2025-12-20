@@ -30,6 +30,7 @@ COPY . .
 
 # 暴露端口 port
 EXPOSE 5000
+ENV ENV_FILE=.env.prod
 
 # 定義容器啟動時運行的命令
 CMD ["python", "main.py"]

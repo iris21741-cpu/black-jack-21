@@ -1,8 +1,11 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "mysql+pymysql://root:123456@localhost:3306/stg?charset=utf8mb4"
-# DATABASE_URL = "mysql+pymysql://avnadmin:AVNS_eJJurApFvKL2ETNLHsN@mysql-black-jack-black-jack-21.f.aivencloud.com:12039/stg"
+load_dotenv(os.getenv("ENV_FILE", ".env.local"))
+DATABASE_URL = os.getenv("MYSQL_URL")
 
 engine = create_engine(
     DATABASE_URL,

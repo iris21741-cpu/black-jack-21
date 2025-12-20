@@ -1,3 +1,5 @@
+import logging
+
 import pyotp
 
 
@@ -25,5 +27,5 @@ def verify(secret, code) -> bool:
         totp_generator = pyotp.TOTP(secret, interval=60)
         return totp_generator.verify(code)
     except Exception as e:
-        print(f"TOTP verify error {e}")
+        logging.warn(f"TOTP verify error {e}")
         return False

@@ -1,6 +1,8 @@
 import email.message
+import logging
 import smtplib
 
+logger = logging.getLogger(__name__)
 SENDER = "iris21741@gmail.com"
 SUBJECT = "black-jack-21 驗證碼"
 SMTP = "smtp.gmail.com"
@@ -20,10 +22,10 @@ def send_code(to_email:str, code: str):
         server.login(SENDER, PASSWORD)
         server.send_message(msg)
         server.close()
-        print("寄件成功")
+        logger.info("寄件成功")
         return True
     except Exception as e:
-        print(f"發送郵件時發生錯誤: {e}")
+        logger.error(f"發送郵件時發生錯誤: {e}")
         return False
 
 

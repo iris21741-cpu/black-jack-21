@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, UTC
 
 import jwt
 
-SECRET_KEY = "iris21741"  # 🔥 請放你自己的秘密字串
+SECRET_KEY = "iris21741"  #  請放你自己的秘密字串
 ALGORITHM = "HS256"
 EXPIRE_MINUTES = 60 * 24  # Token 有效時間（24 小時）
 

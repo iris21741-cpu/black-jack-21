@@ -1,3 +1,5 @@
+import logging
+
 from entity.orm.GamePlayer import GamePlayer
 from mysql.Engine import SessionLocal
 
@@ -8,10 +10,10 @@ with SessionLocal() as session:
     session.add(new_game_player)
     session.commit()
     session.refresh(new_game_player)
-    print("✅ 新增：", new_game_player)
+    logging.info("✅ 新增：", new_game_player)
 
 # 查詢
 with SessionLocal() as session:
     game_players = session.query(GamePlayer).filter(GamePlayer.game_id == 1).all()
     for g in game_players:
-        print(g)
+        logging.info(g)

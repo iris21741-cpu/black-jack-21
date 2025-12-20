@@ -1,3 +1,5 @@
+import logging
+
 from dealer.Dealer import Dealer
 from entity.Deck import Deck
 from enums.GameStatus import GameStatus
@@ -42,8 +44,8 @@ class Game:
         for _ in range(2):
             self.player.hand.add_card(self.deck.deal())
             self.dealer.hand.add_card(self.deck.deal())
-        print(self.dealer.show_current_value())
-        print(self.player.show_current_value())
+        logging.info(self.dealer.show_current_value())
+        logging.info(self.player.show_current_value())
 
     def player_next_move(self):
         self.player.next_move()
@@ -51,7 +53,7 @@ class Game:
     def player_operation(self, opt):
         if opt == "h":
             self.player.hand.add_card(self.deck.deal())
-            print(self.player.show_current_value())
+            logging.info(self.player.show_current_value())
             self.player.is_first_turn = False
             self.check_player_value()
             return True
@@ -69,11 +71,11 @@ class Game:
                 self.player.bet *= 2
 
                 self.player.hand.add_card(self.deck.deal())
-                print(self.player.show_current_value())
+                logging.info(self.player.show_current_value())
                 self.check_player_value()
                 return True
             else:
-                print("Insufficient chips, cannot double down")
+                logging.error("Insufficient chips, cannot double down")
                 return False
         elif self.status == GameStatus.STATEMENT:
             # 繼續遊戲
@@ -89,14 +91,14 @@ class Game:
     def dealer_operation(self):
         while self.dealer.hand.value() < 17 or self.player.hand.value() > self.dealer.hand.value():
             self.dealer.hand.add_card(self.deck.deal())
-            print("莊家要牌：", self.dealer.hand, "點數：", self.dealer.hand.value())
+            logging.info("莊家要牌：", self.dealer.hand, "點數：", self.dealer.hand.value())
 
     def show_result(self):
         player_score = self.player.hand.value()
         dealer_score = self.dealer.hand.value()
-        print("\n最終結果：")
-        print(self.player.show_current_value())
-        print(self.dealer.show_current_value())
+        logging.info("\n最終結果：")
+        logging.info(self.player.show_current_value())
+        logging.info(self.dealer.show_current_value())
 
         statement = result_statement(self.player, self.dealer)
         self.player.statement_bet(statement)
@@ -119,7 +121,7 @@ class Game:
         if self.player.chips <= 0:
             self.status = GameStatus.GAME_OVER
             self.player.move = "遊戲結束"
-            print("Game is over")
+            logging.info("Game is over")
         else:
             self.status = GameStatus.STATEMENT
             self.player.move = "要繼續遊戲嗎？（Ｙ／Ｎ）"

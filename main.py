@@ -1,3 +1,6 @@
+import logging
+
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 
@@ -6,8 +9,12 @@ from dao.UserDao import get_by_id, get_by_email
 from email2fa.CodeBuilder import verify
 from entity.Game import Game
 from enums.GameStatus import GameStatus
+from log.Logger import setup_logging
 from login.Login import login, gen_token
 from register.Register import register, checkRegister
+import os
+
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 games = []
@@ -84,6 +91,7 @@ def api_login():
     data = request.get_json()
     email = data["email"]
     password = data["password"]
+    logger.info(f"login email={email}")
     if len(email) < 1:
         return "email is empty", 400
     if len(password) < 8:
@@ -140,7 +148,7 @@ def game_bet(game_id, current_user_data):
     # 下注
     bet = data.get("bet")
     if game.player.chips < bet:
-        print("chips<bet")
+        logging.info("chips<bet")
         return "operation error", 400
 
     game.status = GameStatus.BET
@@ -167,7 +175,7 @@ def player_operation(game_id, current_user_data):
         return "operation error", 400
     data = request.get_json()
     opt = data.get("operation")
-    print(f"operation={opt}")
+    logging.info(f"operation={opt}")
     success = game.player_operation(opt)
     if not success:
         return "operation error", 400
@@ -191,6 +199,9 @@ def get_game(game_id, current_user_data):
     return jsonify(game.to_json_object()), 200
 
 
-
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    setup_logging()
+    port = int(os.getenv("PORT"))
+    debug = bool(os.getenv("DEBUG"))
+
+    app.run(host="0.0.0.0", port=port, debug=debug)
